@@ -1,103 +1,133 @@
-# 🍔 FoodXpress — Online Food Delivery Platform
+# 🍔 FoodXpress — Full-Stack Online Food Delivery & Management System
 
-FoodXpress is a modern, full-stack Java EE web application for online food ordering, restaurant discovery, order tracking, and customer reviews.
-
----
-
-## 📌 Module Overview — Part 3: Customer Portal & Web Interface
-
-This repository contains **Part 3: Customer Portal & Web Interface**, which handles the complete end-to-end customer journey from user authentication, browsing menus, adding items to cart, placing orders, and submitting restaurant ratings & reviews.
-
-### 👥 Team Contribution
-* **Module**: Part 3 — Customer Portal & Web Interface
-* **Contributor**: Tashin Mustakim (`tashinmustakim`)
+**FoodXpress** is a modern, enterprise-grade Java EE web application for online food delivery, restaurant discovery, order tracking, real-time administrative analytics, and customer review moderation.
 
 ---
 
-## ✨ Features Implemented in Customer Portal
+## 🚀 Key Features Overview
 
-* 🔐 **User Authentication & Session Management**:
-  * User Registration & Login with encrypted passwords and session tracking.
-  * Profile management and personal order history.
-* 🍴 **Restaurant & Menu Browsing**:
-  * Browse active restaurants with cuisine filters, addresses, and live ratings.
-  * Interactive restaurant menu view with item descriptions and prices.
-* 🛒 **Shopping Cart & Checkout**:
-  * Dynamic cart session management (add, update quantity, remove items).
-  * Subtotal, tax, delivery fee, and grand total calculations.
-  * Checkout workflow with address input and order summary.
-* 📜 **Order History & Delivery Tracking**:
-  * Detailed past order listing with status badges (`PENDING`, `PREPARING`, `OUT_FOR_DELIVERY`, `DELIVERED`, `CANCELLED`).
-  * Invoice and item breakdown per order.
-* ⭐ **Customer Reviews & Rating System**:
-  * Submit star ratings (1–5 Stars) and feedback comments for restaurants.
-  * Live restaurant average rating recalculation.
+### 👤 Customer Experience
+* 🔐 **Authentication & Security**: Account registration, secure login, password encryption, and session management.
+* 🍴 **Restaurant Discovery**: Browse curated restaurants with cuisine filtering, address details, and live star ratings.
+* 🛒 **Interactive Shopping Cart**: Dynamic cart session management with real-time subtotal, tax, delivery fee, and grand total calculations.
+* 💳 **Checkout & Order Placement**: Streamlined order placement with delivery address assignment and instant invoice generation.
+* 📦 **Order Tracking & History**: Itemized order history log with live delivery status badges (`PENDING`, `PREPARING`, `OUT_FOR_DELIVERY`, `DELIVERED`, `CANCELLED`).
+* ⭐ **Customer Ratings & Reviews**: Submit 1–5 star ratings and written feedback per restaurant with automated average rating recalculation.
 
----
-
-## 🛠️ Technology Stack
-
-* **Backend**: Java EE (Servlets & JSTL 1.2), Maven
-* **Frontend**: JSP (JavaServer Pages), Vanilla CSS3 (Custom Design System with Glassmorphism & Modern Micro-animations), HTML5
-* **Database**: MySQL 8.0 JDBC Connector (`food_delivery_app` schema)
-* **Application Server**: Apache Tomcat / Eclipse Jetty 10
+### 🛡️ Admin Management & Analytics
+* 📊 **Live Analytics Dashboard**: Real-time business overview tracking **Total Revenue (₹)**, **Total Orders**, **Active Restaurants**, and **Registered Users**.
+* 🏪 **Restaurant Management**: Add new restaurants, update cuisine/address/image details, and remove listings.
+* 📜 **Menu Management**: Manage restaurant menus, update dish pricing, and toggle item availability.
+* 🚚 **Live Order Dispatching**: View all platform orders and update live delivery status in real-time.
+* 👥 **User Role Management**: View registered accounts, elevate user permissions (`customer`, `delivery`, `admin`), and moderate platform access.
+* 💬 **Review Moderation**: View customer feedback and monitor platform rating standards.
 
 ---
 
-## 📂 Project Structure (Part 3)
+## 🏗️ Architecture & Technology Stack
+
+FoodXpress is built following the **Model-View-Controller (MVC)** architectural design pattern:
 
 ```text
-part3_customer_portal/
-├── README.md
+       ┌─────────────────────────────────────────────────────────┐
+       │                       Browser UI                        │
+       └────────────────────────────┬────────────────────────────┘
+                                    │ HTTP Requests / JSP Responses
+       ┌────────────────────────────▼────────────────────────────┐
+       │               Controller Layer (Java Servlets)          │
+       │   UserServlet, RestaurantServlet, AdminDashboardServlet...  │
+       └────────────────────────────┬────────────────────────────┘
+                                    │ Invokes DAO Methods
+       ┌────────────────────────────▼────────────────────────────┘
+       │                 Data Access Layer (DAOs)                │
+       │     UserDAO, RestaurantDAO, OrderDAO, ReviewDAO...      │
+       └────────────────────────────┬────────────────────────────┘
+                                    │ JDBC Queries (SQL)
+       ┌────────────────────────────▼────────────────────────────┐
+       │                 Database Layer (MySQL 8.0)              │
+       │                   food_delivery_app                     │
+       └─────────────────────────────────────────────────────────┘
+```
+
+### 🛠️ Tech Stack:
+* **Backend**: Java EE 8 (Servlets, JSTL 1.2), Apache Maven
+* **Frontend**: HTML5, Vanilla CSS3 (Custom Glassmorphism & Micro-animations), JSP (JavaServer Pages)
+* **Database**: MySQL 8.0 with JDBC Driver (`mysql-connector-j`)
+* **Application Server**: Embedded Eclipse Jetty 10 / Apache Tomcat 9+
+* **Security**: `AuthFilter` (Role-based HTTP Access Control Filter)
+
+---
+
+## 🗄️ Database Schema & Entities
+
+The underlying MySQL database `food_delivery_app` consists of 7 normalized tables:
+* `users` — Account profiles, hashed credentials, contact info, and roles (`admin`, `customer`, `delivery`).
+* `restaurants` — Restaurant profile, cuisine type, address, image URL, and average rating.
+* `menu` — Dish name, description, price, rating, image URL, and restaurant mapping.
+* `orders` — Order metadata, total amount, status, user ID, and restaurant ID.
+* `order_items` — Itemized order details, quantity, and item pricing.
+* `cart` / `cart_item` — Session shopping cart state.
+* `reviews` — Customer review text, star rating (1–5), user ID, restaurant ID, and timestamp.
+
+---
+
+## 📁 Repository Directory Structure
+
+```text
+FoodExpress/
+├── README.md                              <-- Project Documentation
 └── src/
     └── main/
         ├── java/
         │   └── com/
         │       └── app/
-        │           └── controllers/
-        │               ├── HomeServlet.java
-        │               ├── UserServlet.java
-        │               ├── RestaurantServlet.java
-        │               ├── MenuServlet.java
-        │               ├── CartServlet.java
-        │               ├── CheckoutServlet.java
-        │               ├── OrderHistoryServlet.java
-        │               └── ReviewServlet.java
+        │           ├── models/            <-- Entity Models (User, Restaurant, Order, Review...)
+        │           ├── dao/               <-- DAO Interfaces
+        │           ├── dao_implementation/ <-- SQL DAO Implementations
+        │           ├── security/          <-- AuthFilter Security Layer
+        │           ├── util/              <-- DBConnection Singleton
+        │           └── controllers/       <-- Web Servlets (Customer & Admin Controllers)
         └── webapp/
+            ├── assets/                    <-- Stylesheets, Images, App Logos
             └── jsp/
-                ├── customer/
-                │   ├── home.jsp
-                │   ├── login.jsp
-                │   ├── register.jsp
-                │   ├── restaurantList.jsp
-                │   ├── restaurantDetails.jsp
-                │   ├── cart.jsp
-                │   ├── checkout.jsp
-                │   ├── orderHistory.jsp
-                │   ├── orderSuccess.jsp
-                │   └── profile.jsp
-                └── shared/
-                    ├── head.jspf
-                    ├── header.jspf
-                    └── footer.jspf
+                ├── customer/              <-- Customer JSPs (home, cart, checkout, reviews...)
+                ├── admin/                 <-- Admin JSPs (dashboard, order control, user list...)
+                └── shared/                <-- Header, Footer & Navigation partials
 ```
 
 ---
 
-## 🚀 How to Run Locally
+## 🚀 Setup & Execution Guide
 
-1. Ensure MySQL server is running with the `food_delivery_app` schema.
-2. Clone the core models (`Part 1`) and DAOs (`Part 2`) into your classpath/project.
-3. Build the project using Maven:
-   ```bash
-   mvn clean compile jetty:run
-   ```
-4. Access the application in your web browser:
-   ```text
-   http://localhost:8085/FoodApp/
-   ```
+### 1. Prerequisites
+* **Java Development Kit (JDK)**: Version 11 or higher (JDK 17/21 recommended)
+* **Apache Maven**: Version 3.8+
+* **MySQL Server**: Version 8.0+ running on port `3306`
+
+### 2. Database Initialization
+Execute the SQL script in your MySQL client to initialize the database:
+```sql
+CREATE DATABASE IF NOT EXISTS food_delivery_app;
+USE food_delivery_app;
+-- Create tables (users, restaurants, menu, orders, order_items, reviews)
+```
+
+### 3. Build & Run Application
+Navigate to the root directory and run the embedded Jetty dev server:
+```bash
+mvn clean compile jetty:run
+```
+
+### 4. Access Application
+Open your browser and navigate to:
+```text
+http://localhost:8085/FoodApp/
+```
+
+* **Customer Credentials**: Register a new account or log in.
+* **Admin Credentials**: `username: admin`, `password: password123`
 
 ---
 
 ## 📜 License
-This project is open source and available for academic and educational evaluation.
+This project is open-source and created for academic, educational, and portfolio purposes.
